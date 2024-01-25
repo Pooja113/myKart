@@ -3,6 +3,8 @@ import dotenv from 'dotenv'
 import bodyparser from 'body-parser'
 import connectDatabase from './db.js'
 import userRoutes from './routes/userRoutes.js'
+import {v2 as cloudinary} from 'cloudinary';
+          
 
 const app = express()
 dotenv.config()
@@ -14,7 +16,13 @@ connectDatabase();
 //     message: "Hello World!!"
 //   })
 // })
+const test = cloudinary.config({ 
+  cloud_name: process.env.CLOUD_NAME, 
+  api_key: process.env.API_KEY, 
+  api_secret: process.env.API_SECRET 
+})
 
+console.log(test)
 app.use(bodyparser.json())
 
 app.use('/user', userRoutes )
