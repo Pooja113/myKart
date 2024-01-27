@@ -10,8 +10,7 @@ export const userControllers = {
       const data = req.body
       const b64 = Buffer.from(req.file.buffer).toString("base64");
       let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
-      const img = await cloudinary.uploader.upload(dataURI, { public_id: "hlqsdk9h" }, 
-      );
+      const img = await cloudinary.uploader.upload(dataURI, { public_id: "hlqsdk9h" });
       
       const newPass = await bcrypt.hash(data.password, 10)
 
@@ -164,9 +163,25 @@ export const userControllers = {
 
   editProfile: async (req, res) => {
     try {
+      const data = req.body
+      if (req.file) {
+        const b64 = Buffer.from(req.file.buffer).toString("base64");
+        const dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+        const img = await cloudinary.uploader.upload(dataURI, { public_id: "hlqsdk9h" });
+        data.profile_pic = img.url
+      }
+      const updatedUser = await User.findOneAndUpdate({ email: req.user.email }, { ...data }, { new: true })
+      if (!updatedUser) {
+        return res.status(404).json({
+          message: "No user found!"
+        })
+    }
+      return res.status(200).json({
+        data: updatedUser
+      })
       
     } catch (error) {
-      console.log(' Error in Login api')
+      console.log('Error in Login api')
        return res.status(400).json({
         message: error.message
       })
@@ -175,6 +190,16 @@ export const userControllers = {
 
   deleteProfile: async (req, res) => {
     try {
+      const user = await User.findOne({ email: req.user.email })
+      if (!user) {
+        return res.status(404).json({
+          message: "No user found!!"
+        })
+      }
+      await User.deleteOne({email: req.user.email});
+      return res.status(200).json({
+        message: "Profile deleted Successfully!"
+      })
 
     } catch (error) {
       console.log(' Error in Login api')
