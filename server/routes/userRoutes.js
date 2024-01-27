@@ -13,6 +13,7 @@ route.get('/verify/:token', userControllers.tokenVerification)
 route.post('/login',  userControllers.login)
 route.get('/reset/password', userControllers.resetPassword)
 route.post('/forgot/password', userControllers.forgotPassword)
+route.post('/change/password/:token', userControllers.changePassword)
 route.put('/edit/profile',verify, upload.single('profile'), userControllers.editProfile)
 route.delete('/delete/profile', verify, userControllers.deleteProfile)
 
