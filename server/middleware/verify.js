@@ -3,16 +3,14 @@ import jwt from 'jsonwebtoken'
 const verify = async (req, res, next) => {
 
   try {
-    const {token} = req.headers
-    const tokenVerification = jwt.verify(token, process.env.SECRET_KEY)
-    if (!tokenVerification) {
+    const { token } = req.headers
+    if (!token) {
       return res.status(400).json({
-        message: "Email verification failed, possibly the link is invalid or expired"
+        message: "You will have to login first !"
       })
     }
-
+    const tokenVerification = jwt.verify(token, process.env.SECRET_KEY)
     req.user = tokenVerification
-
     next();
 
   } catch (error) {
