@@ -8,12 +8,19 @@ export const userControllers = {
   register: async (req, res) => {
     try {
       const data = req.body
-      const b64 = Buffer.from(req.file.buffer).toString("base64");
-      let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
-      const img = await cloudinary.uploader.upload(dataURI, { public_id: "hlqsdk9h" });
+      console.log("req.file",req.file)
+
+      let img = ""
+
+      if (req.file) {
+        const b64 = Buffer.from(req.file.buffer).toString("base64");
+        let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+        img = await cloudinary.uploader.upload(dataURI, { public_id: "hlqsdk9h" });
+      }
+
       
       const newPass = await bcrypt.hash(data.password, 10)
-      const user = await User.create({ ...data, password: newPass, profile_pic: img.url })
+      const user = await User.create({ ...data, password: newPass, profile_pic: img?.url })
       const token = jwt.sign({ _id: user._id, email: user.email }, process.env.SECRET_KEY);
 
       
