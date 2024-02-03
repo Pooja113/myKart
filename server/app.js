@@ -3,6 +3,8 @@ import dotenv from 'dotenv'
 import bodyparser from 'body-parser'
 import connectDatabase from './db.js'
 import userRoutes from './routes/userRoutes.js'
+import productRoutes from './routes/productRoutes.js'
+
 import {v2 as cloudinary} from 'cloudinary';
           
 
@@ -24,7 +26,8 @@ cloudinary.config({
 
 app.use(bodyparser.json())
 
-app.use('/user', userRoutes )
+app.use('/user', userRoutes)
+app.use('/product', productRoutes)
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on ${process.env.PORT}`)

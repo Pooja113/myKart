@@ -1,11 +1,9 @@
 import express from 'express'
-import multer from 'multer'
 import { userControllers } from '../controllers/userControllers.js';
 import verify from '../middleware/verify.js';
+import {upload} from '../utils/multerStorage.js';
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
-
+console.log("upload", upload)
 const route = express.Router();
 
 route.post('/register', upload.single('profile'), userControllers.register)
