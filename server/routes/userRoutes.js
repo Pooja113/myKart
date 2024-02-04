@@ -1,9 +1,7 @@
 import express from 'express'
 import { userControllers } from '../controllers/userControllers.js';
 import verify from '../middleware/verify.js';
-import {upload} from '../utils/multerStorage.js';
-
-console.log("upload", upload)
+import { upload } from '../utils/multerStorage.js';
 const route = express.Router();
 
 route.post('/register', upload.single('profile'), userControllers.register)
