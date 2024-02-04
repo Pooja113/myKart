@@ -7,21 +7,23 @@ export const productControllers = {
     try {
       const data = req.body;
       const user = await User.findById(req.user._id)
-  
+      if (data.productReviews) {
+        data.productReviews = JSON.parse(data.productReviews)
+      }
       if (user.role !== "admin") {
         return res.status(401).json({
           message: "You do not have permission to add products"
         })
       } else {
-        console.log("req.files", req.files)
-        
+        let imageUrl = []
         if (req.files) {
-          const b64 = Buffer.from(req.file.buffer).toString("base64");
-          let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
-          img = await cloudinary.uploader.upload(dataURI, { public_id: "hlqsdk9h" });
+          req.files.map((eachfile) => {
+            imageUrl.push(`${process.env.BASE_URL}/uploads/` + eachfile.path.split('\\').slice(-1))
+          })
         }
         const product = await Products.create({
-          ...data
+          ...data,
+          productImages: imageUrl
         })
         return res.status(201).json({
           message: "Product Created!",
